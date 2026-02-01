@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "skills": {
+    "mac-tts": {
+      "version": "1.0.0",
+      "installedAt": 1769942494398
+    },
+    "say-xiaoai": {
+      "version": "0.1.0",
+      "installedAt": 1769946292659
+    }
+  }
+}
