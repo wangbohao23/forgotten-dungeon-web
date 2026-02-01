@@ -8,6 +8,10 @@
     "say-xiaoai": {
       "version": "0.1.0",
       "installedAt": 1769946292659
+    },
+    "github": {
+      "version": "1.0.0",
+      "installedAt": 1769957070513
     }
   }
 }
