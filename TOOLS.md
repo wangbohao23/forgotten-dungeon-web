@@ -33,4 +33,11 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 
 ---
 
+### 股票 API 备忘
+- **新浪财经** — 已不可用 ❌
+- **腾讯财经** — 可用 ✅ `https://qt.gtimg.cn/q=sh600519`
+- **东方财富** — 可用 ✅
+
+---
+
 Add whatever helps you do your job. This is your cheat sheet.
