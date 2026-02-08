@@ -40,4 +40,10 @@ Skills are shared. Your setup is yours. Keeping them apart means you can update 
 
 ---
 
+### Brave Search API 参数
+- **search_lang**: `zh-hans` (中文简体)
+- **ui_lang**: `zh-CN` (中文界面)
+
+---
+
 Add whatever helps you do your job. This is your cheat sheet.
