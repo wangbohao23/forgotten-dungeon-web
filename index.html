@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>遗忘地牢 | Forgotten Dungeon</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        body {
+            font-family: 'Courier New', 'VT323', monospace;
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #00ff41;
+            overflow-x: hidden;
+        }
+
+        /* CRT 屏幕效果 */
+        .crt-container {
+            position: relative;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .crt-container::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1),
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .crt-container::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* 主容器 */
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            height: calc(100vh - 40px);
+        }
+
+        /* 侧边栏 - 玩家状态 */
+        .sidebar {
+            background: rgba(0, 20, 0, 0.8);
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2), inset 0 0 20px rgba(0, 255, 65, 0.05);
+        }
+
+        .sidebar h2 {
+            color: #00ff41;
+            font-size: 24px;
+            text-align: center;
+            border-bottom: 1px solid #00ff41;
+            padding-bottom: 10px;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+        .stat-box {
+            background: rgba(0, 40, 0, 0.5);
+            border: 1px solid #008f11;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .stat-box h3 {
+            color: #00cc33;
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .stat-label {
+            color: #888;
+        }
+
+        .stat-value {
+            color: #00ff41;
+            font-weight: bold;
+        }
+
+        /* HP 条 */
+        .hp-bar-container {
+            margin-top: 5px;
+        }
+
+        .hp-bar {
+            width: 100%;
+            height: 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .hp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3333, #ff6600, #00ff41);
+            transition: width 0.3s ease;
+        }
+
+        .hp-text {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 5px;
+            color: #00ff41;
+        }
+
+        /* 背包 */
+        .inventory-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .inventory-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(0, 60, 0, 0.3);
+            border-left: 3px solid #00ff41;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .inventory-item:hover {
+            background: rgba(0, 100, 0, 0.5);
+            transform: translateX(5px);
+        }
+
+        .inventory-item .item-name {
+            color: #00ff41;
+            font-weight: bold;
+        }
+
+        .inventory-item .item-desc {
+            color: #888;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        /* 主游戏区域 */
+        .main-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* 场景描述区域 */
+        .scene-panel {
+            background: rgba(0, 10, 0, 0.9);
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            padding: 25px;
+            flex: 1;
+            overflow-y: auto;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.15), inset 0 0 30px rgba(0, 255, 65, 0.03);
+        }
+
+        .location-title {
+            color: #00ff41;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #00ff41;
+            border-bottom: 2px solid #00ff41;
+            padding-bottom: 10px;
+        }
+
+        .scene-description {
+            color: #b3ffb3;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        /* 游戏日志 */
+        .log-panel {
+            background: rgba(0, 5, 0, 0.95);
+            border: 1px solid #008f11;
+            border-radius: 8px;
+            padding: 15px;
+            height: 200px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            margin: 8px 0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .log-entry.info {
+            background: rgba(0, 50, 100, 0.3);
+            border-left: 3px solid #0088ff;
+            color: #88ccff;
+        }
+
+        .log-entry.combat {
+            background: rgba(100, 0, 0, 0.3);
+            border-left: 3px solid #ff3333;
+            color: #ff8888;
+        }
+
+        .log-entry.success {
+            background: rgba(0, 100, 0, 0.3);
+            border-left: 3px solid #00ff41;
+            color: #88ff88;
+        }
+
+        .log-entry.loot {
+            background: rgba(100, 100, 0, 0.3);
+            border-left: 3px solid #ffff00;
+            color: #ffff88;
+        }
+
+        /* 输入区域 */
+        .input-panel {
+            background: rgba(0, 20, 0, 0.9);
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .prompt {
+            color: #00ff41;
+            font-size: 18px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .command-input {
+            flex: 1;
+            background: rgba(0, 40, 0, 0.5);
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            padding: 12px 15px;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .command-input:focus {
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+            background: rgba(0, 60, 0, 0.7);
+        }
+
+        .command-input::placeholder {
+            color: #005511;
+        }
+
+        .btn {
+            background: linear-gradient(180deg, #003300, #001100);
+            border: 2px solid #00ff41;
+            color: #00ff41;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            background: linear-gradient(180deg, #00ff41, #008f11);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+        }
+
+        /* 快捷按钮 */
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .quick-btn {
+            background: rgba(0, 50, 0, 0.5);
+            border: 1px solid #008f11;
+            color: #00cc33;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: rgba(0, 100, 0, 0.7);
+            border-color: #00ff41;
+            color: #00ff41;
+        }
+
+        /* 保存/加载按钮 */
+        .save-controls {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .save-controls .btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0d0d0d;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00ff41;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00cc33;
+        }
+
+        /* 闪烁光标 */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: #00ff41;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* 响应式 */
+        @media (max-width: 900px) {
+            .game-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+            
+            .sidebar {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .stat-box {
+                flex: 1;
+                min-width: 150px;
+            }
+        }
+
+        /* 标题动画 */
+        .game-title {
+            text-align: center;
+            font-size: 14px;
+            color: #005511;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        /* 敌人显示 */
+        .enemy-display {
+            background: rgba(50, 0, 0, 0.3);
+            border: 1px solid #ff3333;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .enemy-display.active {
+            display: block;
+            animation: enemyAppear 0.5s ease;
+        }
+
+        @keyframes enemyAppear {
+            from { 
+                opacity: 0; 
+                transform: scale(0.9);
+            }
+            to { 
+                opacity: 1; 
+                transform: scale(1);
+            }
+        }
+
+        .enemy-name {
+            color: #ff3333;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff3333;
+        }
+
+        .enemy-hp-bar {
+            width: 100%;
+            height: 15px;
+            background: #1a0000;
+            border: 1px solid #ff3333;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .enemy-hp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #660000, #ff3333);
+            transition: width 0.3s ease;
+        }
+
+        /* 方向按钮 */
+        .directions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .dir-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 40, 0, 0.7);
+            border: 2px solid #00ff41;
+            color: #00ff41;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.2s;
+        }
+
+        .dir-btn:hover:not(:disabled) {
+            background: #00ff41;
+            color: #000;
+        }
+
+        .dir-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="crt-container">
+        <div class="game-title">═══ FORGOTTEN DUNGEON v1.0 ═══</div>
+        <div class="game-container">
+            <!-- 侧边栏 -->
+            <aside class="sidebar">
+                <h2>🎭 角色状态</h2>
+                
+                <div class="stat-box">
+                    <h3>📊 基础属性</h3>
+                    <div class="stat-row">
+                        <span class="stat-label">名称:</span>
+                        <span class="stat-value" id="player-name">无名冒险者</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">等级:</span>
+                        <span class="stat-value" id="player-level">1</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">经验:</span>
+                        <span class="stat-value" id="player-xp">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">金币:</span>
+                        <span class="stat-value" id="player-gold">0</span>
+                    </div>
+                </div>
+
+                <div class="stat-box">
+                    <h3>❤️ 生命值</h3>
+                    <div class="hp-bar-container">
+                        <div class="hp-bar">
+                            <div class="hp-fill" id="hp-bar" style="width: 100%"></div>
+                        </div>
+                        <div class="hp-text"><span id="current-hp">100</span> / <span id="max-hp">100</span> HP</div>
+                    </div>
+                </div>
+
+                <div class="stat-box">
+                    <h3>🎒 背包</h3>
+                    <div class="inventory-list" id="inventory-list">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+
+                <div class="save-controls">
+                    <button class="btn" onclick="game.saveGame()">💾 保存</button>
+                    <button class="btn" onclick="game.loadGame()">📂 加载</button>
+                </div>
+            </aside>
+
+            <!-- 主游戏区域 -->
+            <main class="main-area">
+                <!-- 场景描述 -->
+                <div class="scene-panel" id="scene-panel">
+                    <h1 class="location-title" id="location-title">🚪 地牢入口</h1>
+                    <div class="scene-description" id="scene-description">
+                        加载中...
+                    </div>
+                    
+                    <!-- 敌人显示 -->
+                    <div class="enemy-display" id="enemy-display">
+                        <div class="enemy-name" id="enemy-name">沼泽巨鼠</div>
+                        <div class="enemy-hp-bar">
+                            <div class="enemy-hp-fill" id="enemy-hp-bar" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 方向控制 -->
+                    <div class="directions">
+                        <button class="dir-btn" id="btn-north" onclick="game.move('north')">北</button>
+                        <button class="dir-btn" id="btn-south" onclick="game.move('south')">南</button>
+                        <button class="dir-btn" id="btn-east" onclick="game.move('east')">东</button>
+                        <button class="dir-btn" id="btn-west" onclick="game.move('west')">西</button>
+                    </div>
+                </div>
+
+                <!-- 游戏日志 -->
+                <div class="log-panel" id="log-panel">
+                    <!-- 动态生成 -->
+                </div>
+
+                <!-- 输入区域 -->
+                <div class="input-panel">
+                    <span class="prompt">&gt;<span class="cursor"></span></span>
+                    <input type="text" class="command-input" id="command-input" placeholder="输入命令 (如: 攻击, 去东边, 检查袋子...)" autocomplete="off">
+                    <button class="btn" onclick="game.executeCommand()">执行</button>
+                </div>
+
+                <!-- 快捷按钮 -->
+                <div class="quick-actions">
+                    <button class="quick-btn" onclick="game.quickCommand('检查')">🔍 检查</button>
+                    <button class="quick-btn" onclick="game.quickCommand('攻击')">⚔️ 攻击</button>
+                    <button class="quick-btn" onclick="game.quickCommand('背包')">🎒 背包</button>
+                    <button class="quick-btn" onclick="game.quickCommand('状态')">📊 状态</button>
+                    <button class="quick-btn" onclick="game.quickCommand('帮助')">❓ 帮助</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // 游戏数据
+        const LOCATIONS = {
+            entrance: {
+                id: 'entrance',
+                name: '🚪 地牢入口',
+                description: `你站在一个阴暗潮湿的石室里，这里似乎是地牢的入口。
+
+四周的石墙覆盖着青苔，空气中弥漫着腐朽的气味。微弱的火把光芒在墙上投下诡异的阴影。
+
+在你面前有三条通道：
+• 左侧是一条向下的石阶，通向黑暗深处
+• 中间是一条狭窄的走廊，隐约能听到滴水声
+• 右侧是一个黑暗的洞口，有冷风从中吹出`,
+                exits: { south: 'dripping_corridor' },
+                items: [],
+                enemy: null
+            },
+            dripping_corridor: {
+                id: 'dripping_corridor',
+                name: '💧 滴水通道',
+                description: `你来到了一条狭长的通道，头顶不断有水滴落下。
+
+通道两侧的墙壁湿滑难行，地面上积着浅浅的水洼。远处传来窸窸窣窣的声音，像是有什么东西在黑暗中移动...
+
+在通道尽头，你看到：
+• 一个破旧的布袋靠在墙边
+• 墙上有一道裂缝，似乎可以通向别处
+• 前方有更宽阔的空间`,
+                exits: { north: 'entrance', east: 'hidden_chamber' },
+                items: [
+                    { id: 'ancient_coin', name: '古旧铜币', type: 'misc', description: '一枚刻有奇怪符文的铜币' }
+                ],
+                enemy: {
+                    id: 'swamp_rat',
+                    name: '沼泽巨鼠',
+                    hp: 40,
+                    maxHp: 40,
+                    damage: 8,
+                    xp: 15,
+                    loot: [
+                        { id: 'rat_tail', name: '沼泽巨鼠尾巴', type: 'material', description: '湿漉漉的老鼠尾巴' }
+                    ]
+                }
+            },
+            hidden_chamber: {
+                id: 'hidden_chamber',
+                name: '🗝️ 隐秘密室',
+                description: `你发现了一个隐藏在墙后的小密室！
+
+这里比外面干燥许多，墙上刻满了古老的符文。密室中央有一个石台，上面摆放着一些物品。
+
+在密室的一角，你发现：
+• 一具古老的骷髅，手中握着什么东西
+• 一个上锁的箱子
+• 墙上有一幅褪色的壁画，描绘着某种仪式`,
+                exits: { west: 'dripping_corridor' },
+                items: [
+                    { id: 'healing_potion_small', name: '小型治疗药水', type: 'consumable', heal: 30, quantity: 1, description: '红色液体在瓶中微微发光' },
+                    { id: 'bread', name: '硬面包', type: 'consumable', heal: 20, quantity: 1, description: '能填饱肚子，虽然硬得像石头' }
+                ],
+                enemy: null
+            }
+        };
+
+        // 游戏类
+        class ForgottenDungeon {
+            constructor() {
+                this.player = {
+                    name: '无名冒险者',
+                    level: 1,
+                    hp: 100,
+                    maxHp: 100,
+                    xp: 0,
+                    xpToNext: 100,
+                    gold: 10,
+                    inventory: [
+                        { id: 'rusty_dagger', name: '生锈的匕首', type: 'weapon', damage: 5, description: '一把锈迹斑斑的匕首，但总比空手强' }
+                    ]
+                };
+                this.currentLocation = 'entrance';
+                this.discoveredLocations = ['entrance'];
+                this.flags = {};
+                this.logs = [];
+                this.currentEnemy = null;
+                this.inCombat = false;
+                
+                this.init();
+            }
+
+            init() {
+                this.updateUI();
+                this.addLog('欢迎来到遗忘地牢！输入"帮助"查看可用命令。', 'info');
+                this.renderScene();
+                
+                // 绑定回车键
+                document.getElementById('command-input').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.executeCommand();
+                    }
+                });
+            }
+
+            renderScene() {
+                const location = LOCATIONS[this.currentLocation];
+                document.getElementById('location-title').textContent = location.name;
+                document.getElementById('scene-description').textContent = location.description;
+                
+                // 更新方向按钮
+                const directions = ['north', 'south', 'east', 'west'];
+                directions.forEach(dir => {
+                    const btn = document.getElementById(`btn-${dir}`);
+                    if (location.exits[dir]) {
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                    } else {
+                        btn.disabled = true;
+                        btn.style.opacity = '0.3';
+                    }
+                });
+
+                // 检查敌人
+                if (location.enemy && !this.flags[`defeated_${location.enemy.id}`]) {
+                    this.startCombat(location.enemy);
+                } else {
+                    this.endCombat();
+                }
+            }
+
+            startCombat(enemy) {
+                this.currentEnemy = { ...enemy, currentHp: enemy.hp };
+                this.inCombat = true;
+                
+                const enemyDisplay = document.getElementById('enemy-display');
+                enemyDisplay.classList.add('active');
+                document.getElementById('enemy-name').textContent = `⚔️ ${enemy.name}`;
+                this.updateEnemyHp();
+                
+                this.addLog(`遭遇了 ${enemy.name}！战斗开始！`, 'combat');
+            }
+
+            endCombat() {
+                this.currentEnemy = null;
+                this.inCombat = false;
+                document.getElementById('enemy-display').classList.remove('active');
+            }
+
+            updateEnemyHp() {
+                if (this.currentEnemy) {
+                    const percent = (this.currentEnemy.currentHp / this.currentEnemy.maxHp) * 100;
+                    document.getElementById('enemy-hp-bar').style.width = `${percent}%`;
+                }
+            }
+
+            move(direction) {
+                const location = LOCATIONS[this.currentLocation];
+                const newLocation = location.exits[direction];
+                
+                if (newLocation) {
+                    if (this.inCombat) {
+                        this.addLog('战斗中无法移动！', 'combat');
+                        return;
+                    }
+                    
+                    this.currentLocation = newLocation;
+                    if (!this.discoveredLocations.includes(newLocation)) {
+                        this.discoveredLocations.push(newLocation);
+                    }
+                    this.addLog(`你向${this.getDirectionName(direction)}移动...`, 'info');
+                    this.renderScene();
+                } else {
+                    this.addLog('那个方向没有路。', 'info');
+                }
+            }
+
+            getDirectionName(dir) {
+                const names = { north: '北', south: '南', east: '东', west: '西' };
+                return names[dir] || dir;
+            }
+
+            executeCommand() {
+                const input = document.getElementById('command-input');
+                const command = input.value.trim();
+                
+                if (!command) return;
+                
+                input.value = '';
+                this.processCommand(command);
+            }
+
+            quickCommand(cmd) {
+                document.getElementById('command-input').value = cmd;
+                this.executeCommand();
+            }
+
+            processCommand(command) {
+                const cmd = command.toLowerCase();
+                
+                // 移动命令
+                if (cmd.includes('北') || cmd.includes('north')) {
+                    this.move('north');
+                    return;
+                }
+                if (cmd.includes('南') || cmd.includes('south')) {
+                    this.move('south');
+                    return;
+                }
+                if (cmd.includes('东') || cmd.includes('east')) {
+                    this.move('east');
+                    return;
+                }
+                if (cmd.includes('西') || cmd.includes('west')) {
+                    this.move('west');
+                    return;
+                }
+
+                // 攻击
+                if (cmd.includes('攻击') || cmd.includes('attack') || cmd.includes('打')) {
+                    this.attack();
+                    return;
+                }
+
+                // 检查/搜索
+                if (cmd.includes('检查') || cmd.includes('搜索') || cmd.includes('look') || cmd.includes('search')) {
+                    this.search();
+                    return;
+                }
+
+                // 背包
+                if (cmd.includes('背包') || cmd.includes('inventory') || cmd.includes('bag')) {
+                    this.showInventory();
+                    return;
+                }
+
+                // 状态
+                if (cmd.includes('状态') || cmd.includes('status') || cmd.includes('stats')) {
+                    this.showStatus();
+                    return;
+                }
+
+                // 使用物品
+                if (cmd.includes('使用') || cmd.includes('use') || cmd.includes('喝') || cmd.includes('吃')) {
+                    this.useItem(cmd);
+                    return;
+                }
+
+                // 拾取
+                if (cmd.includes('拾取') || cmd.includes('捡') || cmd.includes('拿') || cmd.includes('take') || cmd.includes('pick')) {
+                    this.pickupItem(cmd);
+                    return;
+                }
+
+                // 帮助
+                if (cmd.includes('帮助') || cmd.includes('help') || cmd.includes('?')) {
+                    this.showHelp();
+                    return;
+                }
+
+                this.addLog(`未知命令: "${command}"。输入"帮助"查看可用命令。`, 'info');
+            }
+
+            attack() {
+                if (!this.inCombat) {
+                    this.addLog('这里没有敌人可以攻击。', 'info');
+                    return;
+                }
+
+                // 玩家攻击
+                const weapon = this.player.inventory.find(i => i.type === 'weapon');
+                const damage = weapon ? weapon.damage + Math.floor(Math.random() * 3) : 2 + Math.floor(Math.random() * 2);
+                
+                this.currentEnemy.currentHp -= damage;
+                this.addLog(`你用${weapon ? weapon.name : '拳头'}攻击 ${this.currentEnemy.name}，造成 ${damage} 点伤害！`, 'combat');
+                this.updateEnemyHp();
+
+                // 检查敌人死亡
+                if (this.currentEnemy.currentHp <= 0) {
+                    this.defeatEnemy();
+                    return;
+                }
+
+                // 敌人反击
+                setTimeout(() => {
+                    const enemyDamage = Math.max(1, this.currentEnemy.damage - Math.floor(Math.random() * 3));
+                    this.player.hp -= enemyDamage;
+                    this.addLog(`${this.currentEnemy.name} 反击，造成 ${enemyDamage} 点伤害！`, 'combat');
+                    
+                    if (this.player.hp <= 0) {
+                        this.player.hp = 0;
+                        this.addLog('你倒下了... 游戏结束！', 'combat');
+                        this.addLog('刷新页面重新开始。', 'info');
+                    }
+                    
+                    this.updateUI();
+                }, 500);
+            }
+
+            defeatEnemy() {
+                const enemy = this.currentEnemy;
+                this.addLog(`你击败了 ${enemy.name}！`, 'success');
+                this.addLog(`获得 ${enemy.xp} 经验值！`, 'success');
+                
+                this.player.xp += enemy.xp;
+                this.checkLevelUp();
+                
+                // 掉落物品
+                if (enemy.loot) {
+                    enemy.loot.forEach(item => {
+                        this.player.inventory.push(item);
+                        this.addLog(`获得战利品: ${item.name}`, 'loot');
+                    });
+                }
+                
+                this.flags[`defeated_${enemy.id}`] = true;
+                this.endCombat();
+                this.updateUI();
+            }
+
+            checkLevelUp() {
+                if (this.player.xp >= this.player.xpToNext) {
+                    this.player.level++;
+                    this.player.xp -= this.player.xpToNext;
+                    this.player.xpToNext = Math.floor(this.player.xpToNext * 1.5);
+                    this.player.maxHp += 20;
+                    this.player.hp = this.player.maxHp;
+                    this.addLog(`🎉 升级了！你现在等级 ${this.player.level}！`, 'success');
+                }
+            }
+
+            search() {
+                const location = LOCATIONS[this.currentLocation];
+                
+                if (this.inCombat) {
+                    this.addLog('战斗中无法搜索！', 'combat');
+                    return;
+                }
+
+                // 搜索场景物品
+                if (location.items && location.items.length > 0) {
+                    this.addLog('你发现了:', 'info');
+                    location.items.forEach(item => {
+                        this.addLog(`  • ${item.name} - ${item.description}`, 'loot');
+                    });
+                    this.addLog('使用 "拾取 [物品名]" 来拿取。', 'info');
+                } else {
+                    this.addLog('你仔细搜索了这个区域，但没有发现什么特别的东西。', 'info');
+                }
+            }
+
+            pickupItem(cmd) {
+                const location = LOCATIONS[this.currentLocation];
+                
+                if (!location.items || location.items.length === 0) {
+                    this.addLog('这里没有可以拾取的物品。', 'info');
+                    return;
+                }
+
+                // 简单处理：拾取所有物品
+                location.items.forEach(item => {
+                    this.player.inventory.push(item);
+                    this.addLog(`拾取了: ${item.name}`, 'success');
+                });
+                location.items = [];
+                this.updateUI();
+            }
+
+            useItem(cmd) {
+                // 查找消耗品
+                const consumables = this.player.inventory.filter(i => i.type === 'consumable');
+                
+                if (consumables.length === 0) {
+                    this.addLog('你没有可以使用的消耗品。', 'info');
+                    return;
+                }
+
+                // 优先使用治疗药水
+                const potion = consumables.find(i => i.id.includes('potion') || i.id.includes('healing'));
+                if (potion) {
+                    this.heal(potion.heal);
+                    potion.quantity--;
+                    if (potion.quantity <= 0) {
+                        this.player.inventory = this.player.inventory.filter(i => i !== potion);
+                    }
+                    this.addLog(`使用了 ${potion.name}，恢复 ${potion.heal} HP！`, 'success');
+                    this.updateUI();
+                    return;
+                }
+
+                // 使用面包
+                const bread = consumables.find(i => i.id === 'bread');
+                if (bread) {
+                    this.heal(bread.heal);
+                    bread.quantity--;
+                    if (bread.quantity <= 0) {
+                        this.player.inventory = this.player.inventory.filter(i => i !== bread);
+                    }
+                    this.addLog(`吃掉了 ${bread.name}，恢复 ${bread.heal} HP！`, 'success');
+                    this.updateUI();
+                    return;
+                }
+            }
+
+            heal(amount) {
+                this.player.hp = Math.min(this.player.maxHp, this.player.hp + amount);
+            }
+
+            showInventory() {
+                if (this.player.inventory.length === 0) {
+                    this.addLog('你的背包是空的。', 'info');
+                    return;
+                }
+
+                this.addLog('🎒 背包内容:', 'info');
+                this.player.inventory.forEach(item => {
+                    const qty = item.quantity ? ` x${item.quantity}` : '';
+                    this.addLog(`  • ${item.name}${qty} - ${item.description}`, 'info');
+                });
+            }
+
+            showStatus() {
+                this.addLog('📊 角色状态:', 'info');
+                this.addLog(`  名称: ${this.player.name}`, 'info');
+                this.addLog(`  等级: ${this.player.level}`, 'info');
+                this.addLog(`  HP: ${this.player.hp}/${this.player.maxHp}`, 'info');
+                this.addLog(`  经验: ${this.player.xp}/${this.player.xpToNext}`, 'info');
+                this.addLog(`  金币: ${this.player.gold}`, 'info');
+            }
+
+            showHelp() {
+                this.addLog('❓ 可用命令:', 'info');
+                this.addLog('  移动: 去[方向], 北/南/东/西', 'info');
+                this.addLog('  战斗: 攻击, 打', 'info');
+                this.addLog('  探索: 检查, 搜索', 'info');
+                this.addLog('  物品: 拾取, 使用, 背包', 'info');
+                this.addLog('  其他: 状态, 帮助', 'info');
+                this.addLog('', 'info');
+                this.addLog('💡 提示: 在战斗中按"攻击"按钮或输入"攻击"', 'info');
+            }
+
+            addLog(message, type = 'info') {
+                this.logs.push({ message, type });
+                if (this.logs.length > 50) {
+                    this.logs.shift();
+                }
+                this.renderLogs();
+            }
+
+            renderLogs() {
+                const logPanel = document.getElementById('log-panel');
+                logPanel.innerHTML = this.logs.map(log => 
+                    `<div class="log-entry ${log.type}">${log.message}</div>`
+                ).join('');
+                logPanel.scrollTop = logPanel.scrollHeight;
+            }
+
+            updateUI() {
+                // 更新玩家信息
+                document.getElementById('player-name').textContent = this.player.name;
+                document.getElementById('player-level').textContent = this.player.level;
+                document.getElementById('player-xp').textContent = `${this.player.xp}/${this.player.xpToNext}`;
+                document.getElementById('player-gold').textContent = this.player.gold;
+                document.getElementById('current-hp').textContent = this.player.hp;
+                document.getElementById('max-hp').textContent = this.player.maxHp;
+
+                // 更新HP条
+                const hpPercent = (this.player.hp / this.player.maxHp) * 100;
+                document.getElementById('hp-bar').style.width = `${hpPercent}%`;
+
+                // 更新背包
+                const inventoryList = document.getElementById('inventory-list');
+                if (this.player.inventory.length === 0) {
+                    inventoryList.innerHTML = '<div style="color: #555; font-style: italic;">背包是空的</div>';
+                } else {
+                    inventoryList.innerHTML = this.player.inventory.map(item => {
+                        const qty = item.quantity ? ` x${item.quantity}` : '';
+                        return `
+                            <div class="inventory-item" onclick="game.quickCommand('使用 ${item.name}')">
+                                <div class="item-name">${item.name}${qty}</div>
+                                <div class="item-desc">${item.description}</div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            }
+
+            saveGame() {
+                const saveData = {
+                    player: this.player,
+                    currentLocation: this.currentLocation,
+                    discoveredLocations: this.discoveredLocations,
+                    flags: this.flags,
+                    logs: this.logs,
+                    saveTime: new Date().toISOString()
+                };
+                
+                localStorage.setItem('forgotten_dungeon_save', JSON.stringify(saveData));
+                this.addLog('💾 游戏已保存！', 'success');
+            }
+
+            loadGame() {
+                const saveData = localStorage.getItem('forgotten_dungeon_save');
+                
+                if (!saveData) {
+                    this.addLog('没有找到存档。', 'info');
+                    return;
+                }
+
+                try {
+                    const data = JSON.parse(saveData);
+                    this.player = data.player;
+                    this.currentLocation = data.currentLocation;
+                    this.discoveredLocations = data.discoveredLocations;
+                    this.flags = data.flags;
+                    this.logs = data.logs || [];
+                    
+                    this.addLog(`📂 游戏已加载！(存档时间: ${new Date(data.saveTime).toLocaleString()})`, 'success');
+                    this.renderScene();
+                    this.updateUI();
+                } catch (e) {
+                    this.addLog('存档损坏，无法加载。', 'combat');
+                }
+            }
+        }
+
+        // 启动游戏
+        const game = new ForgottenDungeon();
+    </script>
+</body>
+</html>
