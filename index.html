@@ -76,8 +76,9 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             box-shadow: 0 0 20px rgba(0, 255, 65, 0.2), inset 0 0 20px rgba(0, 255, 65, 0.05);
+            overflow-y: auto;
         }
 
         .sidebar h2 {
@@ -93,21 +94,21 @@
             background: rgba(0, 40, 0, 0.5);
             border: 1px solid #008f11;
             border-radius: 5px;
-            padding: 15px;
+            padding: 12px;
         }
 
         .stat-box h3 {
             color: #00cc33;
-            font-size: 16px;
-            margin-bottom: 10px;
+            font-size: 14px;
+            margin-bottom: 8px;
             text-transform: uppercase;
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
-            margin: 5px 0;
-            font-size: 14px;
+            margin: 4px 0;
+            font-size: 13px;
         }
 
         .stat-label {
@@ -126,7 +127,7 @@
 
         .hp-bar {
             width: 100%;
-            height: 20px;
+            height: 18px;
             background: #1a1a1a;
             border: 1px solid #333;
             border-radius: 3px;
@@ -141,30 +142,30 @@
 
         .hp-text {
             text-align: center;
-            font-size: 12px;
-            margin-top: 5px;
+            font-size: 11px;
+            margin-top: 3px;
             color: #00ff41;
         }
 
         /* 背包 */
         .inventory-list {
-            max-height: 200px;
+            max-height: 150px;
             overflow-y: auto;
         }
 
         .inventory-item {
-            padding: 8px;
-            margin: 5px 0;
+            padding: 6px;
+            margin: 4px 0;
             background: rgba(0, 60, 0, 0.3);
             border-left: 3px solid #00ff41;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .inventory-item:hover {
             background: rgba(0, 100, 0, 0.5);
-            transform: translateX(5px);
+            transform: translateX(3px);
         }
 
         .inventory-item .item-name {
@@ -174,8 +175,116 @@
 
         .inventory-item .item-desc {
             color: #888;
-            font-size: 11px;
-            margin-top: 3px;
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        /* ===== 小地图样式 ===== */
+        .minimap-box {
+            background: rgba(0, 20, 0, 0.7);
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .minimap-box h3 {
+            color: #00cc33;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .floor-indicator {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffff00;
+            text-shadow: 0 0 10px #ffff00;
+            margin-bottom: 8px;
+            padding: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 3px;
+        }
+
+        .minimap-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 3px;
+            margin-bottom: 8px;
+        }
+
+        .minimap-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border-radius: 3px;
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .minimap-cell.unexplored {
+            background: rgba(0, 0, 0, 0.6);
+            color: #333;
+        }
+
+        .minimap-cell.explored {
+            background: rgba(0, 60, 0, 0.4);
+            border: 1px solid #004400;
+        }
+
+        .minimap-cell.current {
+            background: rgba(0, 255, 65, 0.3);
+            border: 2px solid #00ff41;
+            box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            animation: pulse 1.5s infinite;
+        }
+
+        .minimap-cell.entrance {
+            background: rgba(100, 100, 255, 0.3);
+            border: 1px solid #6666ff;
+        }
+
+        .minimap-cell.exit {
+            background: rgba(255, 100, 100, 0.3);
+            border: 1px solid #ff6666;
+        }
+
+        .minimap-cell.combat {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff3333;
+        }
+
+        .minimap-cell.treasure {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid #ffd700;
+        }
+
+        .minimap-cell.stairs-up, .minimap-cell.stairs-down {
+            background: rgba(139, 69, 19, 0.4);
+            border: 1px solid #8b4513;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* 地图图例 */
+        .minimap-legend {
+            font-size: 10px;
+            color: #888;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         /* 主游戏区域 */
@@ -203,6 +312,19 @@
             text-shadow: 0 0 15px #00ff41;
             border-bottom: 2px solid #00ff41;
             padding-bottom: 10px;
+        }
+
+        .floor-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #660000, #990000);
+            color: #ffff00;
+            font-size: 14px;
+            padding: 4px 12px;
+            border-radius: 4px;
+            margin-left: 15px;
+            vertical-align: middle;
+            border: 1px solid #ff6600;
+            box-shadow: 0 0 10px rgba(255, 102, 0, 0.3);
         }
 
         .scene-description {
@@ -257,6 +379,12 @@
             background: rgba(100, 100, 0, 0.3);
             border-left: 3px solid #ffff00;
             color: #ffff88;
+        }
+
+        .log-entry.floor-change {
+            background: rgba(139, 69, 19, 0.3);
+            border-left: 3px solid #ff6600;
+            color: #ffaa66;
         }
 
         /* 输入区域 */
@@ -358,6 +486,18 @@
             box-shadow: 0 0 15px rgba(255, 255, 0, 0.5);
         }
 
+        .quick-btn.stairs-btn {
+            background: linear-gradient(180deg, #331100, #551100);
+            border-color: #ff6600;
+            color: #ffaa00;
+        }
+
+        .quick-btn.stairs-btn:hover {
+            background: linear-gradient(180deg, #ff6600, #cc4400);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 102, 0, 0.5);
+        }
+
         /* 保存/加载按钮 */
         .save-controls {
             margin-top: auto;
@@ -414,9 +554,10 @@
             .sidebar {
                 flex-direction: row;
                 flex-wrap: wrap;
+                max-height: 300px;
             }
             
-            .stat-box {
+            .stat-box, .minimap-box {
                 flex: 1;
                 min-width: 150px;
             }
@@ -509,11 +650,60 @@
             opacity: 0.3;
             cursor: not-allowed;
         }
+
+        /* 楼层过渡动画 */
+        .floor-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+        .floor-transition.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .floor-transition-text {
+            font-size: 48px;
+            color: #ff6600;
+            text-shadow: 0 0 20px #ff6600;
+            animation: floorTextPulse 1s infinite;
+        }
+
+        .floor-transition-subtext {
+            font-size: 20px;
+            color: #888;
+            margin-top: 20px;
+        }
+
+        @keyframes floorTextPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* 连接路径动画 */
+        .connection-hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div class="crt-container">
-        <div class="game-title">═══ FORGOTTEN DUNGEON v1.0 ═══</div>
+        <div class="game-title">═══ FORGOTTEN DUNGEON v2.0 ═══</div>
         <div class="game-container">
             <!-- 侧边栏 -->
             <aside class="sidebar">
@@ -549,6 +739,25 @@
                     </div>
                 </div>
 
+                <!-- 小地图区域 -->
+                <div class="minimap-box">
+                    <h3>🗺️ 地牢地图</h3>
+                    <div class="floor-indicator" id="floor-indicator">地面层</div>
+                    <div class="minimap-container" id="minimap-container">
+                        <!-- 动态生成 -->
+                    </div>
+                    <div class="minimap-legend">
+                        <div class="legend-item"><span>🟢</span> 你在这里</div>
+                        <div class="legend-item"><span>⬜</span> 已探索</div>
+                        <div class="legend-item"><span>⬛</span> 未探索</div>
+                        <div class="legend-item"><span>🚪</span> 出入口</div>
+                        <div class="legend-item"><span>⚔️</span> 敌人</div>
+                        <div class="legend-item"><span>💎</span> 宝藏</div>
+                        <div class="legend-item"><span>⬆️</span> 上楼</div>
+                        <div class="legend-item"><span>⬇️</span> 下楼</div>
+                    </div>
+                </div>
+
                 <div class="stat-box">
                     <h3>🎒 背包</h3>
                     <div class="inventory-list" id="inventory-list">
@@ -566,7 +775,10 @@
             <main class="main-area">
                 <!-- 场景描述 -->
                 <div class="scene-panel" id="scene-panel">
-                    <h1 class="location-title" id="location-title">🚪 地牢入口</h1>
+                    <h1 class="location-title" id="location-title">
+                        🚪 地牢入口
+                        <span class="floor-badge" id="floor-badge">地面层</span>
+                    </h1>
                     <div class="scene-description" id="scene-description">
                         加载中...
                     </div>
@@ -608,77 +820,490 @@
                     <button class="quick-btn" onclick="game.quickCommand('状态')">📊 状态</button>
                     <button class="quick-btn" onclick="game.quickCommand('帮助')">❓ 帮助</button>
                     <button class="quick-btn pickup-all-btn" id="pickup-all-btn" onclick="game.pickupAll()" style="display: none;">📦 一键拾取</button>
+                    <button class="quick-btn stairs-btn" id="stairs-up-btn" onclick="game.useStairs('up')" style="display: none;">⬆️ 上楼</button>
+                    <button class="quick-btn stairs-btn" id="stairs-down-btn" onclick="game.useStairs('down')" style="display: none;">⬇️ 下楼</button>
                 </div>
             </main>
         </div>
     </div>
 
+    <!-- 楼层过渡动画 -->
+    <div class="floor-transition" id="floor-transition">
+        <div class="floor-transition-text" id="floor-transition-text">正在下楼...</div>
+        <div class="floor-transition-subtext" id="floor-transition-subtext">进入更深的黑暗...</div>
+    </div>
+
     <script>
-        // 游戏数据
-        const LOCATIONS = {
-            entrance: {
-                id: 'entrance',
+        // ==================== 游戏数据 ====================
+        
+        // 楼层配置
+        const FLOORS = {
+            surface: { id: 'surface', name: '地面层', level: 0, theme: 'entrance' },
+            b1: { id: 'b1', name: '地下一层 (B1)', level: 1, theme: 'novice' },
+            b2: { id: 'b2', name: '地下二层 (B2)', level: 2, theme: 'dangerous' },
+            b3: { id: 'b3', name: '地下三层 (B3)', level: 3, theme: 'boss' }
+        };
+
+        // 房间数据 - 每个楼层 5x5 网格
+        const ROOMS = {
+            // 地面层
+            surface_entrance: {
+                id: 'surface_entrance',
                 name: '🚪 地牢入口',
-                description: `你站在一个阴暗潮湿的石室里，这里似乎是地牢的入口。
-
-四周的石墙覆盖着青苔，空气中弥漫着腐朽的气味。微弱的火把光芒在墙上投下诡异的阴影。
-
-在你面前有三条通道：
-• 左侧是一条向下的石阶，通向黑暗深处
-• 中间是一条狭窄的走廊，隐约能听到滴水声
-• 右侧是一个黑暗的洞口，有冷风从中吹出`,
-                exits: { south: 'dripping_corridor' },
+                description: '你站在地牢的入口处。古老的石门敞开着，通往地下的黑暗深处。空气中弥漫着潮湿和腐朽的气息。这里似乎是一个废弃已久的地下遗迹入口。',
+                floor: 'surface',
+                x: 2, y: 0,
+                exits: { south: 'surface_lobby' },
                 items: [],
-                enemy: null
+                enemy: null,
+                type: 'entrance'
             },
-            dripping_corridor: {
-                id: 'dripping_corridor',
-                name: '💧 滴水通道',
-                description: `你来到了一条狭长的通道，头顶不断有水滴落下。
-
-通道两侧的墙壁湿滑难行，地面上积着浅浅的水洼。远处传来窸窸窣窣的声音，像是有什么东西在黑暗中移动...
-
-在通道尽头，你看到：
-• 一个破旧的布袋靠在墙边
-• 墙上有一道裂缝，似乎可以通向别处
-• 前方有更宽阔的空间`,
-                exits: { north: 'entrance', east: 'hidden_chamber' },
+            surface_lobby: {
+                id: 'surface_lobby',
+                name: '🏛️ 前厅',
+                description: '一个宽敞的石制前厅，墙上挂着熄灭多年的火把。地面由古老的石板铺成，缝隙中长出了青苔。正前方有一条向下的石阶，通往地下一层。',
+                floor: 'surface',
+                x: 2, y: 1,
+                exits: { north: 'surface_entrance', south: 'surface_stairs_b1' },
                 items: [
-                    { id: 'ancient_coin', name: '古旧铜币', type: 'misc', description: '一枚刻有奇怪符文的铜币' }
+                    { id: 'torch', name: '火把', type: 'misc', description: '一根还能使用的火把' }
+                ],
+                enemy: null,
+                type: 'normal'
+            },
+            surface_stairs_b1: {
+                id: 'surface_stairs_b1',
+                name: '🪜 通往B1的楼梯',
+                description: '一段古老的石阶盘旋而下，消失在黑暗中。楼梯旁边的墙上刻着警告文字："进入者后果自负"。你可以从这里下到地下一层。',
+                floor: 'surface',
+                x: 2, y: 2,
+                exits: { north: 'surface_lobby', down: 'b1_entrance' },
+                items: [],
+                enemy: null,
+                type: 'stairs_down'
+            },
+
+            // B1 - 新手区
+            b1_entrance: {
+                id: 'b1_entrance',
+                name: '🚪 B1 入口大厅',
+                description: 'B1层 - 新手区：你来到了地下一层。这里相对安全，是冒险者的试炼之地。四周传来老鼠的吱吱声和蝙蝠的扑翅声。',
+                floor: 'b1',
+                x: 2, y: 4,
+                exits: { north: 'b1_corridor', up: 'surface_stairs_b1' },
+                items: [],
+                enemy: null,
+                type: 'stairs_up'
+            },
+            b1_corridor: {
+                id: 'b1_corridor',
+                name: '🐀 鼠患走廊',
+                description: '这条走廊充满了老鼠洞，地面上散落着碎骨和破布。你听到四周传来窸窸窣窣的声音，似乎有什么东西在暗处窥视着你。',
+                floor: 'b1',
+                x: 2, y: 3,
+                exits: { north: 'b1_storage', south: 'b1_entrance', east: 'b1_armory', west: 'b1_dining' },
+                items: [],
+                enemy: {
+                    id: 'giant_rat',
+                    name: '巨鼠',
+                    hp: 30,
+                    maxHp: 30,
+                    damage: 5,
+                    xp: 10,
+                    loot: [
+                        { id: 'rat_tail', name: '老鼠尾巴', type: 'material', description: '湿漉漉的尾巴' }
+                    ]
+                },
+                type: 'combat'
+            },
+            b1_storage: {
+                id: 'b1_storage',
+                name: '📦 储藏室',
+                description: '一个堆满木箱和麻袋的房间。虽然有些箱子已经被打开，但你还是发现了一些有用的物资。',
+                floor: 'b1',
+                x: 2, y: 2,
+                exits: { south: 'b1_corridor', east: 'b1_treasure' },
+                items: [
+                    { id: 'healing_potion_small', name: '小型治疗药水', type: 'consumable', heal: 30, quantity: 2, description: '红色液体在瓶中微微发光' }
+                ],
+                enemy: null,
+                type: 'normal'
+            },
+            b1_armory: {
+                id: 'b1_armory',
+                name: '⚔️ 旧军械库',
+                description: '这里曾经是守卫存放武器的地方。虽然大部分装备已经锈蚀，但你发现了一把还能使用的短剑。',
+                floor: 'b1',
+                x: 3, y: 3,
+                exits: { west: 'b1_corridor', north: 'b1_bat_cave' },
+                items: [
+                    { id: 'short_sword', name: '短剑', type: 'weapon', damage: 8, description: '一把锋利的短剑，比生锈的匕首好用多了' }
+                ],
+                enemy: null,
+                type: 'treasure'
+            },
+            b1_dining: {
+                id: 'b1_dining',
+                name: '🍖 废弃餐厅',
+                description: '长桌上布满了灰尘和霉菌，椅子东倒西歪。角落里似乎有什么东西在移动...',
+                floor: 'b1',
+                x: 1, y: 3,
+                exits: { east: 'b1_corridor' },
+                items: [
+                    { id: 'stale_bread', name: '发霉面包', type: 'consumable', heal: 15, quantity: 1, description: '虽然不太新鲜，但还能吃' }
                 ],
                 enemy: {
-                    id: 'swamp_rat',
-                    name: '沼泽巨鼠',
+                    id: 'cave_bat',
+                    name: '洞穴蝙蝠',
+                    hp: 25,
+                    maxHp: 25,
+                    damage: 4,
+                    xp: 8,
+                    loot: [
+                        { id: 'bat_wing', name: '蝙蝠翅膀', type: 'material', description: '薄薄的蝙蝠翅膀' }
+                    ]
+                },
+                type: 'combat'
+            },
+            b1_treasure: {
+                id: 'b1_treasure',
+                name: '💎 秘密藏宝室',
+                description: '你发现了一个隐藏的小房间！这里堆放着一些冒险者留下的补给品。角落里还有一张通往更深层的地图。',
+                floor: 'b1',
+                x: 3, y: 2,
+                exits: { west: 'b1_storage', south: 'b1_stairs_b2' },
+                items: [
+                    { id: 'healing_potion', name: '治疗药水', type: 'consumable', heal: 50, quantity: 1, description: '恢复更多生命值的药水' },
+                    { id: 'gold_coins', name: '金币袋', type: 'misc', description: '一袋闪闪发光的金币', value: 50 }
+                ],
+                enemy: null,
+                type: 'treasure'
+            },
+            b1_bat_cave: {
+                id: 'b1_bat_cave',
+                name: '🦇 蝙蝠洞窟',
+                description: '洞顶挂满了倒挂的蝙蝠。你的到来惊扰了它们！一群蝙蝠朝你扑来。',
+                floor: 'b1',
+                x: 3, y: 4,
+                exits: { south: 'b1_armory' },
+                items: [],
+                enemy: {
+                    id: 'bat_swarm',
+                    name: '蝙蝠群',
                     hp: 40,
                     maxHp: 40,
-                    damage: 8,
+                    damage: 6,
                     xp: 15,
                     loot: [
-                        { id: 'rat_tail', name: '沼泽巨鼠尾巴', type: 'material', description: '湿漉漉的老鼠尾巴' }
+                        { id: 'bat_wing', name: '蝙蝠翅膀', type: 'material', description: '薄薄的蝙蝠翅膀' }
                     ]
-                }
+                },
+                type: 'combat'
             },
-            hidden_chamber: {
-                id: 'hidden_chamber',
-                name: '🗝️ 隐秘密室',
-                description: `你发现了一个隐藏在墙后的小密室！
+            b1_stairs_b2: {
+                id: 'b1_stairs_b2',
+                name: '🪜 通往B2的楼梯',
+                description: '向下的楼梯比B1的更加破旧，空气中弥漫着腐朽和死亡的气息。下去后将进入更加危险的区域。',
+                floor: 'b1',
+                x: 3, y: 1,
+                exits: { north: 'b1_treasure', down: 'b2_entrance' },
+                items: [],
+                enemy: null,
+                type: 'stairs_down'
+            },
 
-这里比外面干燥许多，墙上刻满了古老的符文。密室中央有一个石台，上面摆放着一些物品。
-
-在密室的一角，你发现：
-• 一具古老的骷髅，手中握着什么东西
-• 一个上锁的箱子
-• 墙上有一幅褪色的壁画，描绘着某种仪式`,
-                exits: { west: 'dripping_corridor' },
+            // B2 - 危险区
+            b2_entrance: {
+                id: 'b2_entrance',
+                name: '⚠️ B2 危险区入口',
+                description: 'B2层 - 危险区：空气变得更加阴冷，墙壁上渗出了水珠。你听到远处传来的骨骼碰撞声和金属摩擦声。这里明显比B1危险得多。',
+                floor: 'b2',
+                x: 2, y: 4,
+                exits: { north: 'b2_skeleton_hall', up: 'b1_stairs_b2' },
+                items: [],
+                enemy: null,
+                type: 'stairs_up'
+            },
+            b2_skeleton_hall: {
+                id: 'b2_skeleton_hall',
+                name: '💀 骷髅大厅',
+                description: '大厅中散落着许多骸骨，其中一些似乎还在微微颤动。突然，一具骷髅从地上站了起来！',
+                floor: 'b2',
+                x: 2, y: 3,
+                exits: { south: 'b2_entrance', east: 'b2_trap_room', west: 'b2_armory', north: 'b2_crossroads' },
+                items: [],
+                enemy: {
+                    id: 'skeleton_warrior',
+                    name: '骷髅战士',
+                    hp: 60,
+                    maxHp: 60,
+                    damage: 12,
+                    xp: 25,
+                    loot: [
+                        { id: 'bone_fragment', name: '骨片', type: 'material', description: '一块完整的骨头' },
+                        { id: 'rusty_sword', name: '锈蚀长剑', type: 'weapon', damage: 10, description: '一把生锈但仍然可用的长剑' }
+                    ]
+                },
+                type: 'combat'
+            },
+            b2_trap_room: {
+                id: 'b2_trap_room',
+                name: '⛓️ 陷阱室',
+                description: '这个房间的地面上布满了机关和陷阱的痕迹。虽然大部分已经失效，但你仍需要小心。在房间深处，你发现了被困住的宝箱。',
+                floor: 'b2',
+                x: 3, y: 3,
+                exits: { west: 'b2_skeleton_hall', north: 'b2_dark_chamber' },
                 items: [
-                    { id: 'healing_potion_small', name: '小型治疗药水', type: 'consumable', heal: 30, quantity: 1, description: '红色液体在瓶中微微发光' },
-                    { id: 'bread', name: '硬面包', type: 'consumable', heal: 20, quantity: 1, description: '能填饱肚子，虽然硬得像石头' }
+                    { id: 'healing_potion_medium', name: '中型治疗药水', type: 'consumable', heal: 70, quantity: 1, description: '更强效的治疗药水' }
                 ],
-                enemy: null
+                enemy: {
+                    id: 'spike_trap',
+                    name: '尖刺陷阱怪',
+                    hp: 45,
+                    maxHp: 45,
+                    damage: 15,
+                    xp: 20,
+                    loot: [
+                        { id: 'trap_mechanism', name: '陷阱零件', type: 'material', description: '可以用来制作陷阱的零件' }
+                    ]
+                },
+                type: 'combat'
+            },
+            b2_armory: {
+                id: 'b2_armory',
+                name: '🛡️ 重装军械库',
+                description: '这里存放着更高级的装备。虽然大部分已经损坏，但你发现了一套皮甲和一把更好的武器。',
+                floor: 'b2',
+                x: 1, y: 3,
+                exits: { east: 'b2_skeleton_hall', north: 'b2_prison' },
+                items: [
+                    { id: 'leather_armor', name: '皮甲', type: 'armor', defense: 5, description: '提供额外防护的皮甲' },
+                    { id: 'iron_dagger', name: '铁匕首', type: 'weapon', damage: 12, description: '锋利的铁制匕首' }
+                ],
+                enemy: null,
+                type: 'treasure'
+            },
+            b2_crossroads: {
+                id: 'b2_crossroads',
+                name: '🔀 十字岔路',
+                description: '四条通道在这里交汇。你选择了一条路前进，但无论哪条路都充满了危险。',
+                floor: 'b2',
+                x: 2, y: 2,
+                exits: { south: 'b2_skeleton_hall', east: 'b2_skeleton_king', west: 'b2_secret_room', north: 'b2_stairs_b3' },
+                items: [],
+                enemy: {
+                    id: 'undead_guard',
+                    name: '亡灵守卫',
+                    hp: 70,
+                    maxHp: 70,
+                    damage: 14,
+                    xp: 30,
+                    loot: [
+                        { id: 'guard_helmet', name: '守卫头盔', type: 'armor', defense: 8, description: '亡灵守卫的头盔' }
+                    ]
+                },
+                type: 'combat'
+            },
+            b2_skeleton_king: {
+                id: 'b2_skeleton_king',
+                name: '👑 骷髅王座室',
+                description: '一个巨大的骷髅坐在石制王座上，空洞的眼眶中闪烁着红色的光芒。这是骷髅王！',
+                floor: 'b2',
+                x: 3, y: 2,
+                exits: { west: 'b2_crossroads' },
+                items: [
+                    { id: 'crown_of_bones', name: '骨冠', type: 'misc', description: '骷髅王的王冠，很有收藏价值' },
+                    { id: 'large_healing_potion', name: '大型治疗药水', type: 'consumable', heal: 100, quantity: 1, description: '能恢复大量生命值' }
+                ],
+                enemy: {
+                    id: 'skeleton_king',
+                    name: '骷髅王',
+                    hp: 120,
+                    maxHp: 120,
+                    damage: 18,
+                    xp: 80,
+                    loot: [
+                        { id: 'bone_sword', name: '骨剑', type: 'weapon', damage: 20, description: '用强大亡灵的骨头制成的剑' }
+                    ]
+                },
+                type: 'combat'
+            },
+            b2_secret_room: {
+                id: 'b2_secret_room',
+                name: '🔮 神秘密室',
+                description: '你发现了一个隐藏的密室，里面存放着古老的卷轴和神秘的物品。空气中充满了魔法的气息。',
+                floor: 'b2',
+                x: 1, y: 2,
+                exits: { east: 'b2_crossroads' },
+                items: [
+                    { id: 'magic_scroll', name: '魔法卷轴', type: 'consumable', description: '包含神秘力量的卷轴', effect: 'random' },
+                    { id: 'mana_potion', name: '魔力药水', type: 'consumable', heal: 50, quantity: 1, description: '恢复生命和魔力' }
+                ],
+                enemy: null,
+                type: 'treasure'
+            },
+            b2_prison: {
+                id: 'b2_prison',
+                name: '⛓️ 地牢监狱',
+                description: '生锈的铁栅栏和锁链遍布这个房间。这里曾经关押着囚犯，现在只剩下怨灵在徘徊。',
+                floor: 'b2',
+                x: 1, y: 4,
+                exits: { south: 'b2_armory' },
+                items: [
+                    { id: 'prison_key', name: '监狱钥匙', type: 'key', description: '可以打开某些锁住的门' }
+                ],
+                enemy: {
+                    id: 'ghost_prisoner',
+                    name: '囚犯怨灵',
+                    hp: 55,
+                    maxHp: 55,
+                    damage: 10,
+                    xp: 35,
+                    loot: [
+                        { id: 'ectoplasm', name: '灵质', type: 'material', description: '幽灵留下的物质' }
+                    ]
+                },
+                type: 'combat'
+            },
+            b2_dark_chamber: {
+                id: 'b2_dark_chamber',
+                name: '🌑 黑暗密室',
+                description: '几乎完全黑暗的房间。你只能听到自己的心跳声和远处传来的诡异声音。',
+                floor: 'b2',
+                x: 3, y: 4,
+                exits: { south: 'b2_trap_room' },
+                items: [],
+                enemy: {
+                    id: 'shadow_beast',
+                    name: '暗影兽',
+                    hp: 80,
+                    maxHp: 80,
+                    damage: 16,
+                    xp: 45,
+                    loot: [
+                        { id: 'shadow_essence', name: '暗影精华', type: 'material', description: '黑暗的结晶' }
+                    ]
+                },
+                type: 'combat'
+            },
+            b2_stairs_b3: {
+                id: 'b2_stairs_b3',
+                name: '🪜 通往B3的楼梯',
+                description: '楼梯变得异常陡峭和危险，墙壁上的符文发出诡异的红光。传说B3层封印着古代恶魔...',
+                floor: 'b2',
+                x: 2, y: 1,
+                exits: { south: 'b2_crossroads', down: 'b3_entrance' },
+                items: [],
+                enemy: null,
+                type: 'stairs_down'
+            },
+
+            // B3 - Boss区
+            b3_entrance: {
+                id: 'b3_entrance',
+                name: '🔥 B3 Boss区入口',
+                description: 'B3层 - Boss区：温度急剧上升，空气中充满了硫磺的味道。墙壁上的符文发出不祥的红光，地面开始震动。最危险的挑战就在前方！',
+                floor: 'b3',
+                x: 2, y: 4,
+                exits: { north: 'b3_hell_chamber', up: 'b2_stairs_b3' },
+                items: [],
+                enemy: null,
+                type: 'stairs_up'
+            },
+            b3_hell_chamber: {
+                id: 'b3_hell_chamber',
+                name: '🔥 地狱熔炉',
+                description: '地面裂开，岩浆在下面流淌。这里曾是召唤恶魔的祭坛，空气中充满了邪恶的能量。',
+                floor: 'b3',
+                x: 2, y: 3,
+                exits: { south: 'b3_entrance', east: 'b3_flame_guard', west: 'b3_demon_altar', north: 'b3_boss_room' },
+                items: [],
+                enemy: {
+                    id: 'fire_imp',
+                    name: '火焰小恶魔',
+                    hp: 100,
+                    maxHp: 100,
+                    damage: 20,
+                    xp: 50,
+                    loot: [
+                        { id: 'fire_essence', name: '火焰精华', type: 'material', description: '燃烧的精华' }
+                    ]
+                },
+                type: 'combat'
+            },
+            b3_flame_guard: {
+                id: 'b3_flame_guard',
+                name: '🔥 烈焰守卫室',
+                description: '一个全身燃烧的守卫矗立在这个房间的中央，它手中的火焰之剑发出刺眼的光芒。',
+                floor: 'b3',
+                x: 3, y: 3,
+                exits: { west: 'b3_hell_chamber' },
+                items: [
+                    { id: 'legendary_potion', name: '传说药水', type: 'consumable', heal: 150, quantity: 1, description: '能恢复大量生命值的神药' }
+                ],
+                enemy: {
+                    id: 'flame_guard',
+                    name: '烈焰守卫',
+                    hp: 150,
+                    maxHp: 150,
+                    damage: 25,
+                    xp: 100,
+                    loot: [
+                        { id: 'flame_sword', name: '烈焰之剑', type: 'weapon', damage: 35, description: '燃烧着永恒火焰的剑' }
+                    ]
+                },
+                type: 'combat'
+            },
+            b3_demon_altar: {
+                id: 'b3_demon_altar',
+                name: '⛧ 恶魔祭坛',
+                description: '一个用黑曜石制成的祭坛，上面刻满了禁忌的符文。祭坛中央漂浮着一颗黑暗的水晶。',
+                floor: 'b3',
+                x: 1, y: 3,
+                exits: { east: 'b3_hell_chamber' },
+                items: [
+                    { id: 'dark_crystal', name: '黑暗水晶', type: 'misc', description: '蕴含强大黑暗力量的水晶', value: 500 }
+                ],
+                enemy: {
+                    id: 'cultist',
+                    name: '邪教徒',
+                    hp: 80,
+                    maxHp: 80,
+                    damage: 18,
+                    xp: 60,
+                    loot: [
+                        { id: 'cultist_robe', name: '邪教长袍', type: 'armor', defense: 12, description: '能增强魔法防御的长袍' }
+                    ]
+                },
+                type: 'combat'
+            },
+            b3_boss_room: {
+                id: 'b3_boss_room',
+                name: '👹 深渊领主殿堂',
+                description: '这里是一切邪恶的源头！巨大的深渊领主阿兹莫丹矗立在你的面前。它的体型占据了半个房间，红色的眼睛死死盯着你。这是最终的决战！',
+                floor: 'b3',
+                x: 2, y: 2,
+                exits: { south: 'b3_hell_chamber' },
+                items: [
+                    { id: 'victory_trophy', name: '胜利奖杯', type: 'misc', description: '证明你击败了深渊领主的奖杯' }
+                ],
+                enemy: {
+                    id: 'azmodan',
+                    name: '深渊领主阿兹莫丹',
+                    hp: 300,
+                    maxHp: 300,
+                    damage: 35,
+                    xp: 500,
+                    loot: [
+                        { id: 'azmodan_heart', name: '深渊之心', type: 'misc', description: '深渊领主的核心，传说中的宝物' },
+                        { id: 'doom_bringer', name: '毁灭者', type: 'weapon', damage: 50, description: '深渊领主使用的武器' }
+                    ]
+                },
+                type: 'combat'
             }
         };
 
-        // 游戏类
+        // ==================== 游戏类 ====================
         class ForgottenDungeon {
             constructor() {
                 this.player = {
@@ -690,11 +1315,27 @@
                     xpToNext: 100,
                     gold: 10,
                     inventory: [
-                        { id: 'rusty_dagger', name: '生锈的匕首', type: 'weapon', damage: 5, description: '一把锈迹斑斑的匕首，但总比空手强' }
+                        { id: 'rusty_dagger', name: '生锈的匕首', type: 'weapon', damage: 5, description: '一把锈迹斑斑的匕首，但总比空手强' },
+                        { id: 'healing_potion_small', name: '小型治疗药水', type: 'consumable', heal: 30, quantity: 2, description: '红色液体在瓶中微微发光' }
                     ]
                 };
-                this.currentLocation = 'entrance';
-                this.discoveredLocations = ['entrance'];
+                this.currentLocation = 'surface_entrance';
+                this.currentFloor = 'surface';
+                
+                // 已探索的房间 (每个房间ID)
+                this.exploredRooms = ['surface_entrance'];
+                
+                // 每个楼层的已探索地图状态 (5x5 网格)
+                this.floorExploration = {
+                    surface: this.createEmptyGrid(),
+                    b1: this.createEmptyGrid(),
+                    b2: this.createEmptyGrid(),
+                    b3: this.createEmptyGrid()
+                };
+                
+                // 标记初始位置为已探索
+                this.markRoomExplored('surface_entrance');
+                
                 this.flags = {};
                 this.logs = [];
                 this.currentEnemy = null;
@@ -703,11 +1344,30 @@
                 this.init();
             }
 
+            // 创建空的5x5网格
+            createEmptyGrid() {
+                return Array(5).fill(null).map(() => Array(5).fill(false));
+            }
+
+            // 标记房间为已探索
+            markRoomExplored(roomId) {
+                if (!this.exploredRooms.includes(roomId)) {
+                    this.exploredRooms.push(roomId);
+                }
+                const room = ROOMS[roomId];
+                if (room && room.x !== undefined && room.y !== undefined) {
+                    this.floorExploration[room.floor][room.y][room.x] = true;
+                }
+            }
+
             init() {
                 this.updateUI();
-                this.addLog('欢迎来到遗忘地牢！输入"帮助"查看可用命令。', 'info');
+                this.addLog('欢迎来到遗忘地牢 v2.0！', 'success');
+                this.addLog('你现在的位置是地牢入口。探索地图，寻找宝藏，小心敌人！', 'info');
+                this.addLog('输入"帮助"查看可用命令。', 'info');
                 this.renderScene();
                 this.updatePickupButton();
+                this.updateStairsButtons();
                 
                 // 绑定回车键
                 document.getElementById('command-input').addEventListener('keypress', (e) => {
@@ -718,20 +1378,40 @@
 
                 // 绑定键盘快捷键
                 document.addEventListener('keydown', (e) => {
-                    if (e.target.tagName === 'INPUT') return; // 输入框聚焦时不处理
+                    if (e.target.tagName === 'INPUT') return;
                     
                     switch(e.key.toLowerCase()) {
                         case 'p':
                             this.pickupAll();
+                            break;
+                        case 'arrowup':
+                        case 'w':
+                            this.move('north');
+                            break;
+                        case 'arrowdown':
+                        case 's':
+                            this.move('south');
+                            break;
+                        case 'arrowleft':
+                        case 'a':
+                            this.move('west');
+                            break;
+                        case 'arrowright':
+                        case 'd':
+                            this.move('east');
                             break;
                     }
                 });
             }
 
             renderScene() {
-                const location = LOCATIONS[this.currentLocation];
-                document.getElementById('location-title').textContent = location.name;
+                const location = ROOMS[this.currentLocation];
+                const floor = FLOORS[location.floor];
+                
+                document.getElementById('location-title').innerHTML = 
+                    `${location.name}<span class="floor-badge">${floor.name}</span>`;
                 document.getElementById('scene-description').textContent = location.description;
+                document.getElementById('floor-indicator').textContent = floor.name;
                 
                 // 更新方向按钮
                 const directions = ['north', 'south', 'east', 'west'];
@@ -747,13 +1427,66 @@
                 });
 
                 // 检查敌人
-                if (location.enemy && !this.flags[`defeated_${location.enemy.id}`]) {
+                if (location.enemy && !this.flags[`defeated_${location.enemy.id}_${this.currentLocation}`]) {
                     this.startCombat(location.enemy);
                 } else {
                     this.endCombat();
                 }
                 
                 this.updatePickupButton();
+                this.updateStairsButtons();
+                this.renderMiniMap();
+            }
+
+            // 渲染小地图
+            renderMiniMap() {
+                const container = document.getElementById('minimap-container');
+                const currentRoom = ROOMS[this.currentLocation];
+                const currentFloorRooms = Object.values(ROOMS).filter(r => r.floor === this.currentFloor);
+                
+                let html = '';
+                
+                for (let y = 0; y < 5; y++) {
+                    for (let x = 0; x < 5; x++) {
+                        // 找到这个位置的房间
+                        const room = currentFloorRooms.find(r => r.x === x && r.y === y);
+                        const isExplored = this.floorExploration[this.currentFloor][y][x];
+                        const isCurrent = currentRoom.x === x && currentRoom.y === y;
+                        
+                        let cellClass = 'minimap-cell';
+                        let icon = '⬛';
+                        
+                        if (isCurrent) {
+                            cellClass += ' current';
+                            icon = '🟢';
+                        } else if (isExplored && room) {
+                            cellClass += ' explored';
+                            // 根据房间类型显示不同图标
+                            if (room.type === 'entrance' || room.type === 'stairs_up') {
+                                cellClass += ' entrance';
+                                icon = '🚪';
+                            } else if (room.type === 'stairs_down') {
+                                cellClass += ' exit';
+                                icon = '⬇️';
+                            } else if (room.type === 'combat' && !this.flags[`defeated_${room.enemy?.id}_${room.id}`]) {
+                                cellClass += ' combat';
+                                icon = '⚔️';
+                            } else if (room.type === 'treasure') {
+                                cellClass += ' treasure';
+                                icon = '💎';
+                            } else {
+                                icon = '⬜';
+                            }
+                        } else if (!isExplored) {
+                            cellClass += ' unexplored';
+                            icon = '⬛';
+                        }
+                        
+                        html += `<div class="${cellClass}">${icon}</div>`;
+                    }
+                }
+                
+                container.innerHTML = html;
             }
 
             startCombat(enemy) {
@@ -782,24 +1515,129 @@
             }
 
             move(direction) {
-                const location = LOCATIONS[this.currentLocation];
-                const newLocation = location.exits[direction];
+                const location = ROOMS[this.currentLocation];
+                const newLocationId = location.exits[direction];
                 
-                if (newLocation) {
+                if (newLocationId) {
+                    // 检查是否是楼梯
+                    if (newLocationId === 'down' || newLocationId === 'up') {
+                        this.addLog('请使用楼梯按钮上下楼层。', 'info');
+                        return;
+                    }
+                    
                     if (this.inCombat) {
                         this.addLog('战斗中无法移动！', 'combat');
                         return;
                     }
                     
-                    this.currentLocation = newLocation;
-                    if (!this.discoveredLocations.includes(newLocation)) {
-                        this.discoveredLocations.push(newLocation);
-                    }
+                    const newRoom = ROOMS[newLocationId];
+                    const oldFloor = this.currentFloor;
+                    
+                    this.currentLocation = newLocationId;
+                    this.currentFloor = newRoom.floor;
+                    
+                    // 标记新房间为已探索
+                    this.markRoomExplored(newLocationId);
+                    
                     this.addLog(`你向${this.getDirectionName(direction)}移动...`, 'info');
+                    
+                    // 如果换楼层了，显示特殊消息
+                    if (oldFloor !== this.currentFloor) {
+                        const floor = FLOORS[this.currentFloor];
+                        this.addLog(`进入了 ${floor.name}！`, 'floor-change');
+                    }
+                    
                     this.renderScene();
                 } else {
                     this.addLog('那个方向没有路。', 'info');
                 }
+            }
+
+            useStairs(direction) {
+                const location = ROOMS[this.currentLocation];
+                
+                if (this.inCombat) {
+                    this.addLog('战斗中无法使用楼梯！', 'combat');
+                    return;
+                }
+                
+                const targetRoomId = location.exits[direction];
+                if (!targetRoomId || (targetRoomId !== 'down' && targetRoomId !== 'up' && !ROOMS[targetRoomId])) {
+                    this.addLog(`这里没有${direction === 'up' ? '上' : '下'}楼的楼梯。`, 'info');
+                    return;
+                }
+                
+                // 显示过渡动画
+                this.showFloorTransition(direction, () => {
+                    let newRoomId;
+                    if (targetRoomId === 'down' || targetRoomId === 'up') {
+                        // 查找对应楼层的目标房间
+                        const currentRoom = ROOMS[this.currentLocation];
+                        const targetFloor = direction === 'up' ? 
+                            this.getPreviousFloor(currentRoom.floor) : 
+                            this.getNextFloor(currentRoom.floor);
+                        
+                        // 找到目标楼层对应的楼梯房间
+                        const targetRooms = Object.values(ROOMS).filter(r => 
+                            r.floor === targetFloor && 
+                            r.type === (direction === 'up' ? 'stairs_down' : 'stairs_up')
+                        );
+                        
+                        if (targetRooms.length > 0) {
+                            newRoomId = targetRooms[0].id;
+                        }
+                    } else {
+                        newRoomId = targetRoomId;
+                    }
+                    
+                    if (newRoomId && ROOMS[newRoomId]) {
+                        const oldFloor = this.currentFloor;
+                        this.currentLocation = newRoomId;
+                        this.currentFloor = ROOMS[newRoomId].floor;
+                        this.markRoomExplored(newRoomId);
+                        
+                        const floor = FLOORS[this.currentFloor];
+                        this.addLog(`${direction === 'up' ? '上楼' : '下楼'}来到了 ${floor.name}！`, 'floor-change');
+                        
+                        this.renderScene();
+                        this.updateUI();
+                    }
+                });
+            }
+
+            getNextFloor(currentFloor) {
+                const order = ['surface', 'b1', 'b2', 'b3'];
+                const index = order.indexOf(currentFloor);
+                return index < order.length - 1 ? order[index + 1] : null;
+            }
+
+            getPreviousFloor(currentFloor) {
+                const order = ['surface', 'b1', 'b2', 'b3'];
+                const index = order.indexOf(currentFloor);
+                return index > 0 ? order[index - 1] : null;
+            }
+
+            showFloorTransition(direction, callback) {
+                const transition = document.getElementById('floor-transition');
+                const text = document.getElementById('floor-transition-text');
+                const subtext = document.getElementById('floor-transition-subtext');
+                
+                if (direction === 'up') {
+                    text.textContent = '正在上楼...';
+                    subtext.textContent = '回到更安全的区域...';
+                } else {
+                    text.textContent = '正在下楼...';
+                    subtext.textContent = '进入更深的黑暗...';
+                }
+                
+                transition.classList.add('active');
+                
+                setTimeout(() => {
+                    callback();
+                    setTimeout(() => {
+                        transition.classList.remove('active');
+                    }, 300);
+                }, 800);
             }
 
             getDirectionName(dir) {
@@ -826,20 +1664,30 @@
                 const cmd = command.toLowerCase();
                 
                 // 移动命令
-                if (cmd.includes('北') || cmd.includes('north')) {
+                if (cmd.includes('北') || cmd.includes('north') || cmd.includes('上')) {
                     this.move('north');
                     return;
                 }
-                if (cmd.includes('南') || cmd.includes('south')) {
+                if (cmd.includes('南') || cmd.includes('south') || cmd.includes('下')) {
                     this.move('south');
                     return;
                 }
-                if (cmd.includes('东') || cmd.includes('east')) {
+                if (cmd.includes('东') || cmd.includes('east') || cmd.includes('右')) {
                     this.move('east');
                     return;
                 }
-                if (cmd.includes('西') || cmd.includes('west')) {
+                if (cmd.includes('西') || cmd.includes('west') || cmd.includes('左')) {
                     this.move('west');
+                    return;
+                }
+
+                // 楼梯命令
+                if (cmd.includes('上楼') || cmd.includes('up')) {
+                    this.useStairs('up');
+                    return;
+                }
+                if (cmd.includes('下楼') || cmd.includes('down')) {
+                    this.useStairs('down');
                     return;
                 }
 
@@ -879,6 +1727,12 @@
                     return;
                 }
 
+                // 地图
+                if (cmd.includes('地图') || cmd.includes('map')) {
+                    this.showMapInfo();
+                    return;
+                }
+
                 // 帮助
                 if (cmd.includes('帮助') || cmd.includes('help') || cmd.includes('?')) {
                     this.showHelp();
@@ -896,7 +1750,8 @@
 
                 // 玩家攻击
                 const weapon = this.player.inventory.find(i => i.type === 'weapon');
-                const damage = weapon ? weapon.damage + Math.floor(Math.random() * 3) : 2 + Math.floor(Math.random() * 2);
+                const baseDamage = weapon ? weapon.damage : 2;
+                const damage = baseDamage + Math.floor(Math.random() * 5);
                 
                 this.currentEnemy.currentHp -= damage;
                 this.addLog(`你用${weapon ? weapon.name : '拳头'}攻击 ${this.currentEnemy.name}，造成 ${damage} 点伤害！`, 'combat');
@@ -910,7 +1765,7 @@
 
                 // 敌人反击
                 setTimeout(() => {
-                    const enemyDamage = Math.max(1, this.currentEnemy.damage - Math.floor(Math.random() * 3));
+                    const enemyDamage = Math.max(1, this.currentEnemy.damage - Math.floor(Math.random() * 5));
                     this.player.hp -= enemyDamage;
                     this.addLog(`${this.currentEnemy.name} 反击，造成 ${enemyDamage} 点伤害！`, 'combat');
                     
@@ -940,9 +1795,10 @@
                     });
                 }
                 
-                this.flags[`defeated_${enemy.id}`] = true;
+                this.flags[`defeated_${enemy.id}_${this.currentLocation}`] = true;
                 this.endCombat();
                 this.updateUI();
+                this.renderMiniMap(); // 更新地图，敌人标记消失
             }
 
             checkLevelUp() {
@@ -950,14 +1806,15 @@
                     this.player.level++;
                     this.player.xp -= this.player.xpToNext;
                     this.player.xpToNext = Math.floor(this.player.xpToNext * 1.5);
-                    this.player.maxHp += 20;
+                    this.player.maxHp += 25;
                     this.player.hp = this.player.maxHp;
                     this.addLog(`🎉 升级了！你现在等级 ${this.player.level}！`, 'success');
+                    this.addLog('生命值已完全恢复！', 'success');
                 }
             }
 
             search() {
-                const location = LOCATIONS[this.currentLocation];
+                const location = ROOMS[this.currentLocation];
                 
                 if (this.inCombat) {
                     this.addLog('战斗中无法搜索！', 'combat');
@@ -970,14 +1827,21 @@
                     location.items.forEach(item => {
                         this.addLog(`  • ${item.name} - ${item.description}`, 'loot');
                     });
-                    this.addLog('使用 "拾取 [物品名]" 来拿取。', 'info');
+                    this.addLog('使用 "拾取 [物品名]" 来拿取，或直接点击"一键拾取"。', 'info');
                 } else {
                     this.addLog('你仔细搜索了这个区域，但没有发现什么特别的东西。', 'info');
+                }
+                
+                // 显示可移动方向
+                const exits = Object.keys(location.exits);
+                if (exits.length > 0) {
+                    const exitNames = exits.map(e => this.getDirectionName(e)).join('、');
+                    this.addLog(`你可以向 ${exitNames} 方向移动。`, 'info');
                 }
             }
 
             pickupItem(cmd) {
-                const location = LOCATIONS[this.currentLocation];
+                const location = ROOMS[this.currentLocation];
                 
                 if (!location.items || location.items.length === 0) {
                     this.addLog('这里没有可以拾取的物品。', 'info');
@@ -995,7 +1859,7 @@
             }
 
             pickupAll() {
-                const location = LOCATIONS[this.currentLocation];
+                const location = ROOMS[this.currentLocation];
                 
                 if (this.inCombat) {
                     this.addLog('战斗中无法拾取物品！', 'combat');
@@ -1019,12 +1883,42 @@
             }
 
             updatePickupButton() {
-                const location = LOCATIONS[this.currentLocation];
+                const location = ROOMS[this.currentLocation];
                 const btn = document.getElementById('pickup-all-btn');
                 if (location.items && location.items.length > 0) {
                     btn.style.display = 'inline-block';
                 } else {
                     btn.style.display = 'none';
+                }
+            }
+
+            updateStairsButtons() {
+                const location = ROOMS[this.currentLocation];
+                const upBtn = document.getElementById('stairs-up-btn');
+                const downBtn = document.getElementById('stairs-down-btn');
+                
+                // 检查是否有上楼出口
+                const hasUp = location.exits.up || (location.exits.north && ROOMS[location.exits.north]?.type === 'stairs_up');
+                // 检查是否有下楼出口
+                const hasDown = location.exits.down || (location.exits.south && ROOMS[location.exits.south]?.type === 'stairs_down');
+                
+                // 更精确的检查
+                const canGoUp = location.exits.up !== undefined || location.type === 'stairs_up' || 
+                    Object.values(location.exits).some(id => ROOMS[id]?.type === 'stairs_up');
+                const canGoDown = location.exits.down !== undefined || location.type === 'stairs_down' ||
+                    Object.values(location.exits).some(id => ROOMS[id]?.type === 'stairs_down');
+                
+                // 根据房间类型判断
+                if (location.type === 'stairs_up' || location.exits.up) {
+                    upBtn.style.display = 'inline-block';
+                } else {
+                    upBtn.style.display = 'none';
+                }
+                
+                if (location.type === 'stairs_down' || location.exits.down) {
+                    downBtn.style.display = 'inline-block';
+                } else {
+                    downBtn.style.display = 'none';
                 }
             }
 
@@ -1039,7 +1933,7 @@
 
                 // 优先使用治疗药水
                 const potion = consumables.find(i => i.id.includes('potion') || i.id.includes('healing'));
-                if (potion) {
+                if (potion && potion.heal) {
                     this.heal(potion.heal);
                     potion.quantity--;
                     if (potion.quantity <= 0) {
@@ -1050,22 +1944,27 @@
                     return;
                 }
 
-                // 使用面包
-                const bread = consumables.find(i => i.id === 'bread');
-                if (bread) {
-                    this.heal(bread.heal);
-                    bread.quantity--;
-                    if (bread.quantity <= 0) {
-                        this.player.inventory = this.player.inventory.filter(i => i !== bread);
+                // 使用食物
+                const food = consumables.find(i => i.id.includes('bread'));
+                if (food && food.heal) {
+                    this.heal(food.heal);
+                    food.quantity--;
+                    if (food.quantity <= 0) {
+                        this.player.inventory = this.player.inventory.filter(i => i !== food);
                     }
-                    this.addLog(`吃掉了 ${bread.name}，恢复 ${bread.heal} HP！`, 'success');
+                    this.addLog(`吃掉了 ${food.name}，恢复 ${food.heal} HP！`, 'success');
                     this.updateUI();
                     return;
                 }
+
+                this.addLog('没有可以使用物品。', 'info');
             }
 
             heal(amount) {
+                const oldHp = this.player.hp;
                 this.player.hp = Math.min(this.player.maxHp, this.player.hp + amount);
+                const healed = this.player.hp - oldHp;
+                return healed;
             }
 
             showInventory() {
@@ -1077,7 +1976,8 @@
                 this.addLog('🎒 背包内容:', 'info');
                 this.player.inventory.forEach(item => {
                     const qty = item.quantity ? ` x${item.quantity}` : '';
-                    this.addLog(`  • ${item.name}${qty} - ${item.description}`, 'info');
+                    const stats = item.damage ? ` (攻击+${item.damage})` : item.defense ? ` (防御+${item.defense})` : '';
+                    this.addLog(`  • ${item.name}${qty}${stats} - ${item.description}`, 'info');
                 });
             }
 
@@ -1088,17 +1988,37 @@
                 this.addLog(`  HP: ${this.player.hp}/${this.player.maxHp}`, 'info');
                 this.addLog(`  经验: ${this.player.xp}/${this.player.xpToNext}`, 'info');
                 this.addLog(`  金币: ${this.player.gold}`, 'info');
+                this.addLog(`  当前位置: ${FLOORS[this.currentFloor].name}`, 'info');
+            }
+
+            showMapInfo() {
+                const location = ROOMS[this.currentLocation];
+                const exploredCount = this.exploredRooms.filter(id => ROOMS[id].floor === this.currentFloor).length;
+                const totalCount = Object.values(ROOMS).filter(r => r.floor === this.currentFloor).length;
+                
+                this.addLog('🗺️ 地图信息:', 'info');
+                this.addLog(`  当前楼层: ${FLOORS[this.currentFloor].name}`, 'info');
+                this.addLog(`  本层探索进度: ${exploredCount}/${totalCount} 房间`, 'info');
+                this.addLog(`  总探索房间数: ${this.exploredRooms.length}`, 'info');
+                
+                const exits = Object.keys(location.exits);
+                if (exits.length > 0) {
+                    this.addLog(`  可用出口: ${exits.map(e => this.getDirectionName(e)).join('、')}`, 'info');
+                }
             }
 
             showHelp() {
                 this.addLog('❓ 可用命令:', 'info');
-                this.addLog('  移动: 去[方向], 北/南/东/西', 'info');
+                this.addLog('  移动: 北/南/东/西 (或WASD/方向键)', 'info');
+                this.addLog('  楼层: 上楼/下楼 (或点击楼梯按钮)', 'info');
                 this.addLog('  战斗: 攻击, 打', 'info');
                 this.addLog('  探索: 检查, 搜索', 'info');
                 this.addLog('  物品: 拾取, 使用, 背包', 'info');
-                this.addLog('  其他: 状态, 帮助', 'info');
+                this.addLog('  信息: 状态, 地图', 'info');
+                this.addLog('  其他: 帮助', 'info');
                 this.addLog('', 'info');
-                this.addLog('💡 提示: 在战斗中按"攻击"按钮或输入"攻击"', 'info');
+                this.addLog('💡 提示: 小地图显示了已探索和未探索区域', 'info');
+                this.addLog('💡 提示: 不同楼层有不同主题和难度', 'info');
             }
 
             addLog(message, type = 'info') {
@@ -1137,9 +2057,10 @@
                 } else {
                     inventoryList.innerHTML = this.player.inventory.map(item => {
                         const qty = item.quantity ? ` x${item.quantity}` : '';
+                        const icon = item.type === 'weapon' ? '⚔️' : item.type === 'armor' ? '🛡️' : item.type === 'consumable' ? '🧪' : '📦';
                         return `
                             <div class="inventory-item" onclick="game.quickCommand('使用 ${item.name}')">
-                                <div class="item-name">${item.name}${qty}</div>
+                                <div class="item-name">${icon} ${item.name}${qty}</div>
                                 <div class="item-desc">${item.description}</div>
                             </div>
                         `;
@@ -1151,18 +2072,20 @@
                 const saveData = {
                     player: this.player,
                     currentLocation: this.currentLocation,
-                    discoveredLocations: this.discoveredLocations,
+                    currentFloor: this.currentFloor,
+                    exploredRooms: this.exploredRooms,
+                    floorExploration: this.floorExploration,
                     flags: this.flags,
                     logs: this.logs,
                     saveTime: new Date().toISOString()
                 };
                 
-                localStorage.setItem('forgotten_dungeon_save', JSON.stringify(saveData));
+                localStorage.setItem('forgotten_dungeon_save_v2', JSON.stringify(saveData));
                 this.addLog('💾 游戏已保存！', 'success');
             }
 
             loadGame() {
-                const saveData = localStorage.getItem('forgotten_dungeon_save');
+                const saveData = localStorage.getItem('forgotten_dungeon_save_v2');
                 
                 if (!saveData) {
                     this.addLog('没有找到存档。', 'info');
@@ -1173,7 +2096,9 @@
                     const data = JSON.parse(saveData);
                     this.player = data.player;
                     this.currentLocation = data.currentLocation;
-                    this.discoveredLocations = data.discoveredLocations;
+                    this.currentFloor = data.currentFloor || 'surface';
+                    this.exploredRooms = data.exploredRooms || [];
+                    this.floorExploration = data.floorExploration || this.createDefaultExploration();
                     this.flags = data.flags;
                     this.logs = data.logs || [];
                     
@@ -1182,7 +2107,17 @@
                     this.updateUI();
                 } catch (e) {
                     this.addLog('存档损坏，无法加载。', 'combat');
+                    console.error(e);
                 }
+            }
+
+            createDefaultExploration() {
+                return {
+                    surface: this.createEmptyGrid(),
+                    b1: this.createEmptyGrid(),
+                    b2: this.createEmptyGrid(),
+                    b3: this.createEmptyGrid()
+                };
             }
         }
 
