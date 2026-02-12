@@ -345,6 +345,19 @@
             color: #00ff41;
         }
 
+        .quick-btn.pickup-all-btn {
+            background: linear-gradient(180deg, #003300, #004400);
+            border-color: #ffff00;
+            color: #ffff00;
+            font-weight: bold;
+        }
+
+        .quick-btn.pickup-all-btn:hover {
+            background: linear-gradient(180deg, #ffff00, #cc9900);
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.5);
+        }
+
         /* 保存/加载按钮 */
         .save-controls {
             margin-top: auto;
@@ -594,6 +607,7 @@
                     <button class="quick-btn" onclick="game.quickCommand('背包')">🎒 背包</button>
                     <button class="quick-btn" onclick="game.quickCommand('状态')">📊 状态</button>
                     <button class="quick-btn" onclick="game.quickCommand('帮助')">❓ 帮助</button>
+                    <button class="quick-btn pickup-all-btn" id="pickup-all-btn" onclick="game.pickupAll()" style="display: none;">📦 一键拾取</button>
                 </div>
             </main>
         </div>
@@ -693,11 +707,23 @@
                 this.updateUI();
                 this.addLog('欢迎来到遗忘地牢！输入"帮助"查看可用命令。', 'info');
                 this.renderScene();
+                this.updatePickupButton();
                 
                 // 绑定回车键
                 document.getElementById('command-input').addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
                         this.executeCommand();
+                    }
+                });
+
+                // 绑定键盘快捷键
+                document.addEventListener('keydown', (e) => {
+                    if (e.target.tagName === 'INPUT') return; // 输入框聚焦时不处理
+                    
+                    switch(e.key.toLowerCase()) {
+                        case 'p':
+                            this.pickupAll();
+                            break;
                     }
                 });
             }
@@ -726,6 +752,8 @@
                 } else {
                     this.endCombat();
                 }
+                
+                this.updatePickupButton();
             }
 
             startCombat(enemy) {
@@ -963,6 +991,41 @@
                 });
                 location.items = [];
                 this.updateUI();
+                this.updatePickupButton();
+            }
+
+            pickupAll() {
+                const location = LOCATIONS[this.currentLocation];
+                
+                if (this.inCombat) {
+                    this.addLog('战斗中无法拾取物品！', 'combat');
+                    return;
+                }
+                
+                if (!location.items || location.items.length === 0) {
+                    this.addLog('这里没有可以拾取的物品。', 'info');
+                    return;
+                }
+
+                const itemCount = location.items.length;
+                location.items.forEach(item => {
+                    this.player.inventory.push(item);
+                });
+                location.items = [];
+                
+                this.addLog(`📦 一键拾取了 ${itemCount} 件物品！`, 'success');
+                this.updateUI();
+                this.updatePickupButton();
+            }
+
+            updatePickupButton() {
+                const location = LOCATIONS[this.currentLocation];
+                const btn = document.getElementById('pickup-all-btn');
+                if (location.items && location.items.length > 0) {
+                    btn.style.display = 'inline-block';
+                } else {
+                    btn.style.display = 'none';
+                }
             }
 
             useItem(cmd) {
