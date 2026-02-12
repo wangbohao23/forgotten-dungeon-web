@@ -79,6 +79,11 @@
             gap: 15px;
             box-shadow: 0 0 20px rgba(0, 255, 65, 0.2), inset 0 0 20px rgba(0, 255, 65, 0.05);
             overflow-y: auto;
+            min-height: 0;
+        }
+
+        .sidebar > * {
+            flex-shrink: 0;
         }
 
         .sidebar h2 {
@@ -95,6 +100,7 @@
             border: 1px solid #008f11;
             border-radius: 5px;
             padding: 12px;
+            min-height: 80px;
         }
 
         .stat-box h3 {
@@ -185,6 +191,7 @@
             border: 1px solid #00ff41;
             border-radius: 5px;
             padding: 10px;
+            min-height: 200px;
         }
 
         .minimap-box h3 {
@@ -212,6 +219,8 @@
             grid-template-columns: repeat(5, 1fr);
             gap: 3px;
             margin-bottom: 8px;
+            min-height: 150px;
+            width: 100%;
         }
 
         .minimap-cell {
@@ -223,6 +232,8 @@
             border-radius: 3px;
             transition: all 0.2s;
             cursor: default;
+            min-height: 28px;
+            min-width: 28px;
         }
 
         .minimap-cell.unexplored {
@@ -549,17 +560,35 @@
             .game-container {
                 grid-template-columns: 1fr;
                 grid-template-rows: auto 1fr;
+                height: auto;
+                min-height: calc(100vh - 40px);
             }
             
             .sidebar {
                 flex-direction: row;
                 flex-wrap: wrap;
-                max-height: 300px;
+                max-height: none;
+                height: auto;
+            }
+            
+            .sidebar h2 {
+                width: 100%;
             }
             
             .stat-box, .minimap-box {
                 flex: 1;
-                min-width: 150px;
+                min-width: 200px;
+            }
+            
+            .save-controls {
+                width: 100%;
+                margin-top: 15px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .stat-box, .minimap-box {
+                min-width: 100%;
             }
         }
 
